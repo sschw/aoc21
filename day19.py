@@ -90,21 +90,21 @@ transformedPos[0] = (0, 0, 0)
 transformedRot[0] = (1, 2, 3)
 
 changed = True
-newlyAdded = [scannerResults[0]]
+newlyAdded = [scannerResults[0]] # ugly optimization
 while changed:
-  toCheck = newlyAdded
-  newlyAdded = []
+  toCheck = newlyAdded # ugly optimization
+  newlyAdded = [] # ugly optimization
   scannerId = 0
   changed = False
   for s in scannerResults:
     if transformedScannerResults[scannerId] == []:
-      for ts in toCheck:
+      for ts in toCheck: # was previously check against transformendScannerResults
         if ts != []:
           f = findCommonPoints(ts, s)
           if f != None:
             changed = True
             transformedScannerResults[scannerId] = f[0]
-            newlyAdded.append(f[0])
+            newlyAdded.append(f[0]) # ugly optimization
             transformedPos[scannerId] = f[1]
             transformedRot[scannerId] = f[2]
     scannerId += 1
