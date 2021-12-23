@@ -33,11 +33,7 @@ def getOverlapCuboid(cuboid1, cuboid2):
   overlapsZ = overlapZEnd+1-overlapZStart
   if overlapsX <= 0 or overlapsY <= 0 or overlapsZ <= 0:
     return None
-  add = cuboid1[0] != cuboid2[0]
-  if cuboid1[0] == cuboid2[0]:
-    add = not cuboid1[0]
-  if cuboid1[0] and not cuboid2[0]:
-    add = True
+  add = not cuboid2[0]
 
   return (add, (overlapXStart, overlapXEnd), (overlapYStart, overlapYEnd), (overlapZStart, overlapZEnd))
 
