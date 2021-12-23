@@ -32,28 +32,33 @@ def getOverlapCuboid(cuboid1, cuboid2):
   overlapsY = overlapYEnd+1-overlapYStart
   overlapsZ = overlapZEnd+1-overlapZStart
   if overlapsX <= 0 or overlapsY <= 0 or overlapsZ <= 0:
-    return 0
-  return (None, (overlapXStart, overlapXEnd), (overlapYStart, overlapYEnd), (overlapZStart, overlapZEnd))
+    return None
+  add = cuboid1[0] != cuboid2[0]
+  if cuboid1[0] == cuboid2[0]:
+    add = not cuboid1[0]
+  if cuboid1[0] and not cuboid2[0]:
+    add = True
+
+  return (add, (overlapXStart, overlapXEnd), (overlapYStart, overlapYEnd), (overlapZStart, overlapZEnd))
 
 def sumCuboids(cuboids):
-  removeCuboids = []
-  addCuboids = []
+  allCuboids = []
   for i in range(0, len(cuboids)):
     cub = cuboids[i]
+    for j in range(0, len(allCuboids)): #overlap with all previous, also generated
+      pcub = allCuboids[j]
+      overlap = getOverlapCuboid(cub, pcub)
+      if overlap != None:
+        allCuboids.append(overlap)
     if cub[0]:
-      addCuboids.append(cub)
-    for j in range(0, i):
-      pcub = cuboids[j]
-      if pcub[0]:
-        removeCuboids.append(getOverlapCuboid(cub, pcub))
-      else:
-        addCuboids.append(getOverlapCuboid(cub, pcub))
+      allCuboids.append(cub)
 
   sum = 0
-  for c in addCuboids:
-    sum += (c[1][1]-c[1][0]+1) * (c[2][1]-c[2][0]+1) * (c[3][1]+1-c[3][0])
-  for c in removeCuboids:
-    sum -= (c[1][1]+1-c[1][0]) * (c[2][1]+1-c[2][0]) * (c[3][1]+1-c[3][0])
+  for c in allCuboids:
+    if c[0]:
+      sum += (c[1][1]-c[1][0]+1) * (c[2][1]-c[2][0]+1) * (c[3][1]+1-c[3][0])
+    else:
+      sum -= (c[1][1]+1-c[1][0]) * (c[2][1]+1-c[2][0]) * (c[3][1]+1-c[3][0])
   return sum
 
 print(sumCuboids(input_per_line))
